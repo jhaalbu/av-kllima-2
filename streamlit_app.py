@@ -74,8 +74,9 @@ if knapp:
     df, altitude = klimadata.klima_dataframe(lon, lat, startdato, sluttdato, parameterliste)
 
     if plottype == 'Klimaoversikt':
+        st.write('Modellhøyde for gridcelle er: ' + str(altitude) + ' moh.')
         st.write('Trykk på pil oppe i høgre hjørne for å utvide plot')
-        st.write('Modellhøyde på klimapunkt er: ' + str(altitude) + ' moh.')
+        st.write('Modellhøyde for gridcelle er: ' + str(altitude) + ' moh.')
         st.pyplot(plot.klimaoversikt(df, lokalitet, annotert))
         #klimaoversikt(df)
         st.download_button(
@@ -86,6 +87,7 @@ if knapp:
             key='download-csv'
             )
     if plottype == 'Klimaoversikt med 3 døgn snø og returverdi':
+        st.write('Modellhøyde for gridcelle er: ' + str(altitude) + ' moh.')
         st.write('Trykk på pil oppe i høgre hjørne for å utvide plot')
         st.pyplot(plot.klima_sno_oversikt(df, lokalitet, annotert))
         st.download_button(
