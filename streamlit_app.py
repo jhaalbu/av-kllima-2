@@ -71,10 +71,11 @@ knapp = st.button('Vis plott')
 if knapp:
     lon = int(float(lon.strip()))
     lat = int(float(lat.strip()))
-    df = klimadata.klima_dataframe(lon, lat, startdato, sluttdato, parameterliste)
+    df, altitude = klimadata.klima_dataframe(lon, lat, startdato, sluttdato, parameterliste)
 
     if plottype == 'Klimaoversikt':
         st.write('Trykk på pil oppe i høgre hjørne for å utvide plot')
+        st.write('Modellhøyde på klimapunkt er: ' + str(altitude) + ' moh.')
         st.pyplot(plot.klimaoversikt(df, lokalitet, annotert))
         #klimaoversikt(df)
         st.download_button(
