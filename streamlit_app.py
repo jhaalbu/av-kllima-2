@@ -102,7 +102,7 @@ if knapp:
         vind_para = ['windDirection10m24h06', 'windSpeed10m24h06', 'rr', 'tm', 'fsw', 'rrl']
         vindslutt = '2022-03-01'
         vindstart = '2018-03-01'
-        df, altitude = klimadata.klima_dataframe(lon, lat, vindstart, vindslutt, vind_para)
+        vind_df, altitude = klimadata.klima_dataframe(lon, lat, vindstart, vindslutt, vind_para)
         st.pyplot(plot.vind(vind_df))
         st.download_button(
             "Last ned vinddata",
