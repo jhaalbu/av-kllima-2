@@ -45,8 +45,9 @@ def hent_data_klima_dogn(lat, lon, startdato, sluttdato, parametere):
 def klima_dataframe(lat, lon, startdato, sluttdato, parametere):
     parameterdict = {}
     for parameter in parametere:
-        
-        parameterdict[parameter] = nve_api(lat, lon, startdato, sluttdato, parameter)['Data']
+        api_svar = nve_api(lat, lon, startdato, sluttdato, parameter)
+        parameterdict[parameter] = api_svar['Data']
+        altitude = api_svar['Altitude']
      
     df = pd.DataFrame(parameterdict)
     df = df.set_index(pd.date_range(
@@ -55,7 +56,7 @@ def klima_dataframe(lat, lon, startdato, sluttdato, parametere):
     )
     df[df > 1000] = 0
     df = rullande_3dogn_nedbor(df)
-    return df
+    return df, altitude
 
 def maxdf(df):
     maxdf = (pd.DataFrame(df['sdfsw3d'].groupby(pd.Grouper(freq='Y')).max())
