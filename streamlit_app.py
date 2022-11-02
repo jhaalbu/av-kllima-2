@@ -71,12 +71,10 @@ knapp = st.button('Vis plott')
 if knapp:
     lon = int(float(lon.strip()))
     lat = int(float(lat.strip()))
-    df, altitude = klimadata.klima_dataframe(lon, lat, startdato, sluttdato, parameterliste)
+    df = klimadata.klima_dataframe(lon, lat, startdato, sluttdato, parameterliste)
 
     if plottype == 'Klimaoversikt':
-        st.write('Modellhøyde for gridcelle er: ' + str(altitude) + ' moh.')
         st.write('Trykk på pil oppe i høgre hjørne for å utvide plot')
-        st.write('Modellhøyde for gridcelle er: ' + str(altitude) + ' moh.')
         st.pyplot(plot.klimaoversikt(df, lokalitet, annotert))
         #klimaoversikt(df)
         st.download_button(
@@ -87,7 +85,6 @@ if knapp:
             key='download-csv'
             )
     if plottype == 'Klimaoversikt med 3 døgn snø og returverdi':
-        st.write('Modellhøyde for gridcelle er: ' + str(altitude) + ' moh.')
         st.write('Trykk på pil oppe i høgre hjørne for å utvide plot')
         st.pyplot(plot.klima_sno_oversikt(df, lokalitet, annotert))
         st.download_button(
@@ -102,7 +99,7 @@ if knapp:
         vind_para = ['windDirection10m24h06', 'windSpeed10m24h06', 'rr', 'tm', 'fsw', 'rrl']
         vindslutt = '2022-03-01'
         vindstart = '2018-03-01'
-        vind_df, altitude = klimadata.klima_dataframe(lon, lat, vindstart, vindslutt, vind_para)
+        vind_df = klimadata.klima_dataframe(lon, lat, vindstart, vindslutt, vind_para)
         st.pyplot(plot.vind(vind_df))
         st.download_button(
             "Last ned vinddata",
