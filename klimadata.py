@@ -34,6 +34,7 @@ def stedsnavn(utm_nord, utm_ost):
     #for verdi in
     return verdier
 
+
 def hent_data_klima_dogn(lat, lon, startdato, sluttdato, parametere):
     parameterdict = {}
     for parameter in parametere:
@@ -45,8 +46,9 @@ def hent_data_klima_dogn(lat, lon, startdato, sluttdato, parametere):
 def klima_dataframe(lat, lon, startdato, sluttdato, parametere):
     parameterdict = {}
     for parameter in parametere:
-        
-        parameterdict[parameter] = nve_api(lat, lon, startdato, sluttdato, parameter)['Data']
+        api_svar = nve_api(lat, lon, startdato, sluttdato, parameter)
+        parameterdict[parameter] = api_svar['Data']
+        altitude = api_svar['Altitude']
      
     df = pd.DataFrame(parameterdict)
     df = df.set_index(pd.date_range(
@@ -55,7 +57,22 @@ def klima_dataframe(lat, lon, startdato, sluttdato, parametere):
     )
     df[df > 1000] = 0
     df = rullande_3dogn_nedbor(df)
-    return df
+    return df, altitude
+
+def klima_dataframe3h(lat, lon, startdato, sluttdato, parametere):
+    parameterdict = {}
+    for parameter in parametere:
+        api_svar = nve_api(lat, lon, startdato, sluttdato, parameter)
+        parameterdict[parameter] = api_svar['Data']
+        altitude = api_svar['Altitude']
+     
+    df = pd.DataFrame(parameterdict)
+    df = df.set_index(pd.date_range(
+        datetime.datetime(int(startdato[0:4]), int(startdato[5:7]), int(startdato[8:10])),
+        datetime.datetime(int(sluttdato[0:4]), int(sluttdato[5:7]), int(sluttdato[8:10])), freq='3hour')
+    )
+    df[df > 1000] = 0
+    return df, altitude
 
 def maxdf(df):
     maxdf = (pd.DataFrame(df['sdfsw3d'].groupby(pd.Grouper(freq='Y')).max())

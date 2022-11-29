@@ -71,10 +71,11 @@ knapp = st.button('Vis plott')
 if knapp:
     lon = int(float(lon.strip()))
     lat = int(float(lat.strip()))
-    df = klimadata.klima_dataframe(lon, lat, startdato, sluttdato, parameterliste)
+    df, altitude = klimadata.klima_dataframe(lon, lat, startdato, sluttdato, parameterliste)
 
     if plottype == 'Klimaoversikt':
         st.write('Trykk på pil oppe i høgre hjørne for å utvide plot')
+        st.write('Modellhøyde på klimapunkt er: ' + str(altitude) + ' moh.')
         st.pyplot(plot.klimaoversikt(df, lokalitet, annotert))
         #klimaoversikt(df)
         st.download_button(
@@ -86,6 +87,7 @@ if knapp:
             )
     if plottype == 'Klimaoversikt med 3 døgn snø og returverdi':
         st.write('Trykk på pil oppe i høgre hjørne for å utvide plot')
+        st.write('Modellhøyde på klimapunkt er: ' + str(altitude)+ ' moh.')
         st.pyplot(plot.klima_sno_oversikt(df, lokalitet, annotert))
         st.download_button(
             "Last ned klimadata",
@@ -94,6 +96,8 @@ if knapp:
             "text/csv",
             key='download-csv'
             )
+        pdf = st.button('Last ned pdf')
+            
     if vind:
         st.write('Trykk på pil oppe i høgre hjørne for å utvide plot')
         vind_para = ['windDirection10m24h06', 'windSpeed10m24h06', 'rr', 'tm', 'fsw', 'rrl']
@@ -110,6 +114,7 @@ if knapp:
             )
         st.write('Vinddata må brukast med forsiktigheit. Vinddata finnes kunn fra mars 2018 - mars 2022. Vinddata bør hentes fra høgaste punkt i området, og ikkje nede i fjord/dalstrøk.')
         st.write('Vær serleg obs på at det i områder er få dager med snø for å få fram snøførende vindretning.')
+
 st.write('Scriptet henter ned data frå NVE sitt Grid Time Series API, som er visualisert på xgeo.no')
 st.write('Parametere som er brukt er: ')
 

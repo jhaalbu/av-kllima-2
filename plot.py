@@ -6,7 +6,7 @@ import matplotlib.ticker as ticker
 from matplotlib.ticker import MultipleLocator
 from matplotlib.dates import DateFormatter
 import datetime
-#from pyextremes import EVA
+from pyextremes import EVA
 import numpy as np
 import windrose
 from klimadata import *
@@ -326,29 +326,27 @@ def snomengde(df, ax1=None):
     return ax1, ax2
 
 
-def ekstremverdi_3d_sd(df, ax1=None):
+def ekstremverdi_3d_sd(df):
     data = df['sdfsw3d']
     model = EVA(data=data)
     model.get_extremes(
-    method="BM",
-    extremes_type="high",
-    block_size="365.2425D",
-    errors="raise",
+        method="BM",
+        extremes_type="high",
+        block_size="365.2425D",
+        errors="raise",
     )
-    model.fit_model()
-
-    if ax1 is None:
-        ax1 = plt.gca()
+    
+    model.fit_model(model="MLE", distribution="gumbel_r")
 
     fig, ax1 = model.plot_return_values(
-    return_period=np.logspace(0.01, 3.75, 5000),
-    alpha=0.95,
+        return_period=np.logspace(0.01, 3.75, 5000),
+        alpha=0.95,
     )
 
     summary = model.get_summary(
-    return_period=[100, 1000, 5000],
-    alpha=0.95,
-    n_samples=1000,
+        return_period=[100, 1000, 5000],
+        alpha=0.95,
+        n_samples=1000,
     )
 
     ax1.set_xlabel('Returperiode (År)')
@@ -359,7 +357,7 @@ def ekstremverdi_3d_sd(df, ax1=None):
             '1000 år returverdi: ' + str(round(summary['return value'].loc[1000.0])) + ' cm \n'
             '5000 år returverdi: ' + str(round(summary['return value'].loc[5000.0])) + ' cm \n' )
 
-    return fig
+    return fig, ax1
 
 def vind(vind_df):
     vind_df['retning'] = vind_df['windDirection10m24h06']*45
@@ -402,7 +400,7 @@ def klimaoversikt(df, lokalitet, annotert):
 
     ax6, ax7 = snodjupne(df)
 
-    fig.suptitle(f'Klimaoversikt for {lokalitet}', fontsize=30, y=0.9, va='bottom')
+    fig.suptitle(f'Klimaoversikt for {lokalitet}', fontsize=20, y=0.9, va='bottom')
 
     return fig
 
@@ -429,10 +427,10 @@ def klima_sno_oversikt(df, lokalitet, annotert):
     ax8, ax9 = nysnodjupne_3d(df)
 
     ax10 = fig.add_subplot(326)
-    ax10 = gammel_plot_ekstremverdier_3dsno(df)
+    ax10 = ekstremverdi_3d_sd(df)
 
 
-    fig.suptitle(f'Klimaoversikt for {lokalitet}', fontsize=30, y=0.9, va='bottom')
+    fig.suptitle(f'Klimaoversikt for {lokalitet}', fontsize=20, y=0.9, va='bottom')
 
     return fig
 
